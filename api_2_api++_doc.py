@@ -15,7 +15,7 @@ def getFilename():
     hFilenames = []
     hppFilenames = []
     typesFilenames = []
-    for dirname, dirnames, filenames in os.walk('./core/source/api/zinc'):
+    for dirname, dirnames, filenames in os.walk('./core/source/api/opencmiss/zinc'):
         if '.svn' in dirnames:
             # don't go into any .git directories.
             dirnames.remove('.svn')
@@ -698,12 +698,17 @@ def getEnumLineCommentsToCppTuple(hppHeaderContent, sortedEnumMap):
                     if len(enumName) > 0:
                         enumName = enumName[0]
                         cEnumName = currentClassName+enumName
+                        print cEnumName
                         charPos = 0
                         while charPos < len(cEnumName):
                             currentChar = cEnumName[charPos]
                             if (currentChar.isupper()):
-                                newchar = currentChar.lower()
-                                cEnumName = cEnumName[0:charPos] + "_" + newchar+ cEnumName[charPos+1:]
+                                if currentChar == "I" and cEnumName[charPos+1] == "O":
+                                    cEnumName = cEnumName[0:charPos] + "_" + "io" + cEnumName[charPos+2:]
+                                    charPos = charPos + 1
+                                else:
+                                    newchar = currentChar.lower()
+                                    cEnumName = cEnumName[0:charPos] + "_" + newchar+ cEnumName[charPos+1:]
                             charPos = charPos + 1
                         cEnumName = "cmzn" + cEnumName
                         cEnumName = cEnumName.replace("\n", "")
@@ -845,8 +850,8 @@ def main():
     hFilenames, hppFilenames, typesFilenames = getFilename()
   #  summary(hFilenames, hppFilenames, typesFilenames)
     file_pairs = match_pair(hFilenames, hppFilenames, typesFilenames)
-    hppFilenames.append(['./core/source/api/zinc/types', 'scenecoordinatesystem.hpp'])
-    typesFilenames.append(['./core/source/api/zinc', 'status.h'])
+    hppFilenames.append(['./core/source/api/opencmiss/zinc/types', 'scenecoordinatesystem.hpp'])
+    typesFilenames.append(['./core/source/api/opencmiss/zinc', 'status.h'])
   #  for pair in pair_list:
   #      print pair;
     try:
